@@ -1,5 +1,11 @@
 <?php
-require_once "inc/function.php"
+require_once "inc/function.php";
+$info = '';
+$task = $_GET['task'] ?? 'report';
+if ('seed' == $task) {
+    seed();
+    $info = 'Data seeded successfully';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,8 +27,21 @@ require_once "inc/function.php"
                 <h2>Crud</h2>
                 <p>A sample Project to perfrom CRUD operations using plain files and PHP</p>
                 <?php include_once('inc/templates/nav.php'); ?>
+                <hr>
+                <?php
+                if ($info != '') {
+                    echo "<p>{$info}</p>";
+                }
+                ?>
             </div>
         </div>
+        <?php if ('report' == $task): ?>
+            <div class="row">
+                <div class="column column-60 column-offset-20">
+                    <?php generateReport(); ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </body>
 
