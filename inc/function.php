@@ -1,6 +1,7 @@
 <?php
 
-define('DB_NAME', '/home/iqbal/Sites/Crud/data/db.txt');
+define('DB_NAME', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'db.txt');
+
 function seed()
 {
     $data = array(
@@ -76,7 +77,7 @@ function generateReport()
     </table>
 <?php
 }
-function addStudent($fname, $lname, $roll)
+function addStudent(string $fname, string $lname, string $roll)
 {
     $found = false;
     $serializedData = file_get_contents(DB_NAME);

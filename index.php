@@ -7,10 +7,14 @@ if ('seed' == $task) {
     seed();
     $info = 'Data seeded successfully';
 }
+$fname = '';
+$lname = '';
+$roll = '';
+
 if (isset($_POST['submit'])) {
-    $fname = Filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING);
-    $lname = Filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_STRING);
-    $roll = Filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_STRING);
+    $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_SPECIAL_CHARS);
+    $lname = filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_SPECIAL_CHARS);
+    $roll = filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if ($fname != '' && $lname != '' && $roll != '') {
         $result = addStudent($fname, $lname, $roll);
@@ -18,7 +22,7 @@ if (isset($_POST['submit'])) {
             header('location: index.php?task=report');
             exit;
         } else {
-            header('location: index.php?task=add&error=1');
+            $error = '1';
         }
     }
 }
@@ -42,7 +46,7 @@ if (isset($_POST['submit'])) {
             <div class="column column-60 column-offset-20">
                 <h2>Crud</h2>
                 <p>A sample Project to perfrom CRUD operations using plain files and PHP</p>
-                <?php include_once('inc/templates/nav.php'); ?>
+                <?php include_once('inc\templates\nav.php'); ?>
                 <hr>
                 <?php
                 if ($info != '') {
@@ -70,11 +74,11 @@ if (isset($_POST['submit'])) {
                 <div class="column column-60 column-offset-20">
                     <form action="index.php?task=add" method="POST">
                         <label for="fname">First Name</label>
-                        <input type="text" name="fname" id="fname">
+                        <input type="text" name="fname" id="fname" value="<?php echo $fname; ?>">
                         <label for="lname">Last Name</label>
-                        <input type="text" name="lname" id="lname">
+                        <input type="text" name="lname" id="lname" value="<?php echo $lname; ?>">
                         <label for="roll">Roll</label>
-                        <input type="text" name="roll" id="roll">
+                        <input type="text" name="roll" id="roll" value="<?php echo $roll; ?>">
                         <button type="submit" class="button-primary" value="Save" name="submit">Save</button>
                     </form>
                 </div>
