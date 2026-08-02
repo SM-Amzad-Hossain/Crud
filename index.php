@@ -6,6 +6,15 @@ if ('seed' == $task) {
     seed();
     $info = 'Data seeded successfully';
 }
+if (isset($_POST['submit'])) {
+    $fname = filter_input(INPUT_POST, 'fname', 'FILTER_SANITIZE_STRING');
+    $lname = filter_input(INPUT_POST, 'lname', 'FILTER_SANITIZE_STRING');
+    $roll = filter_input(INPUT_POST, 'roll', 'FILTER_SANITIZE_STRING');
+
+    if ($fname != '' && $lname != '' && $roll != '') {
+        addStudent($fname, $lname, $roll);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,13 +44,22 @@ if ('seed' == $task) {
                 ?>
             </div>
         </div>
-        <?php if ('report' == $task): ?>
+        <?php if ('add' == $task): ?>
             <div class="row">
                 <div class="column column-60 column-offset-20">
-                    <?php generateReport(); ?>
+                    <form action="/crud/index.php?report" method="post">
+                        <label for="fname">First Name</label>
+                        <input type="text" name="fname" id="fname">
+                        <label for="lname">Last Name</label>
+                        <input type="text" name="lname" id="lname">
+                        <label for="roll">Roll</label>
+                        <input type="text" name="roll" id="roll">
+                        <button type="submit" class="button-primary" value="Save" name="submit">Save</button>
+                    </form>
                 </div>
             </div>
         <?php endif; ?>
+
     </div>
 </body>
 

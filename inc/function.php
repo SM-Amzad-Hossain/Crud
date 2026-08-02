@@ -76,3 +76,4 @@ function generateReport()
     </table>
 <?php
 }
+function addStudent($fname, $lname, $roll)
