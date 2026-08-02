@@ -77,3 +77,17 @@ function generateReport()
 <?php
 }
 function addStudent($fname, $lname, $roll)
+{
+    $serializedData = file_get_contents(DB_NAME);
+    $students = unserialize($serializedData);
+    $newID = count($students) + 1;
+    $student = array(
+        'id'    => $newID,
+        'fname' => $fname,
+        'lname' => $lname,
+        'roll'  => $roll
+    );
+    array_push($students, $student);
+    $serializeData = serialize($students);
+    file_put_contents(DB_NAME, $serializeData, LOCK_EX);
+}

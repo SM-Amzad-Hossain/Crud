@@ -7,12 +7,14 @@ if ('seed' == $task) {
     $info = 'Data seeded successfully';
 }
 if (isset($_POST['submit'])) {
-    $fname = filter_input(INPUT_POST, 'fname', 'FILTER_SANITIZE_STRING');
-    $lname = filter_input(INPUT_POST, 'lname', 'FILTER_SANITIZE_STRING');
-    $roll = filter_input(INPUT_POST, 'roll', 'FILTER_SANITIZE_STRING');
+    $fname = Filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING);
+    $lname = Filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_STRING);
+    $roll = Filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_STRING);
 
     if ($fname != '' && $lname != '' && $roll != '') {
         addStudent($fname, $lname, $roll);
+        header('location: index.php?task=report');
+        exit;
     }
 }
 ?>
@@ -44,10 +46,17 @@ if (isset($_POST['submit'])) {
                 ?>
             </div>
         </div>
+        <?php if ('report' == $task): ?>
+            <div class="row">
+                <div class="column column-60 column-offset-20">
+                    <?php generateReport(); ?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if ('add' == $task): ?>
             <div class="row">
                 <div class="column column-60 column-offset-20">
-                    <form action="/crud/index.php?report" method="post">
+                    <form action="index.php?task=add" method="POST">
                         <label for="fname">First Name</label>
                         <input type="text" name="fname" id="fname">
                         <label for="lname">Last Name</label>
