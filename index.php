@@ -15,14 +15,27 @@ if (isset($_POST['submit'])) {
     $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_SPECIAL_CHARS);
     $lname = filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_SPECIAL_CHARS);
     $roll = filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_SPECIAL_CHARS);
+    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
 
-    if ($fname != '' && $lname != '' && $roll != '') {
-        $result = addStudent($fname, $lname, $roll);
-        if ($result) {
-            header('location: index.php?task=report');
-            exit;
-        } else {
-            $error = '1';
+    if ($id) {
+        if ($fname != '' && $lname != '' && $roll != '') {
+            $result = updateStudent($id, $fname, $lname, $roll);
+            if ($result) {
+                header('location: index.php?task=report');
+                exit;
+            } else {
+                $error = '1';
+            }
+        }
+    } else {
+        if ($fname != '' && $lname != '' && $roll != '') {
+            $result = addStudent($fname, $lname, $roll);
+            if ($result) {
+                header('location: index.php?task=report');
+                exit;
+            } else {
+                $error = '1';
+            }
         }
     }
 }
@@ -46,7 +59,7 @@ if (isset($_POST['submit'])) {
             <div class="column column-60 column-offset-20">
                 <h2>Crud</h2>
                 <p>A sample Project to perfrom CRUD operations using plain files and PHP</p>
-                <?php include_once('inc\templates\nav.php'); ?>
+                <?php include_once('inc/templates/nav.php'); ?>
                 <hr>
                 <?php
                 if ($info != '') {
@@ -84,6 +97,27 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
         <?php endif; ?>
+        <?php if ('edit' == $task):
+            $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+            $student = getStudent($id);
+            if ($student) :
+        ?>
+                <div class="row">
+                    <div class="column column-60 column-offset-20">
+                        <form action="index.php?task=edit&id=<?php echo $id; ?>" method="POST">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <label for="fname">First Name</label>
+                            <input type="text" name="fname" id="fname" value="<?php echo $student['fname']; ?>">
+                            <label for="lname">Last Name</label>
+                            <input type="text" name="lname" id="lname" value="<?php echo $student['lname']; ?>">
+                            <label for="roll">Roll</label>
+                            <input type="text" name="roll" id="roll" value="<?php echo $student['roll']; ?>">
+                            <button type="submit" class="button-primary" name="submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+        <?php endif;
+        endif; ?>
 
     </div>
 </body>

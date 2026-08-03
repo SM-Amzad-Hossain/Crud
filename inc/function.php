@@ -69,7 +69,7 @@ function generateReport()
             <td><?php printf('%d', $student['id']); ?></td>
             <td><?php printf('%s %s', $student['fname'], $student['lname']); ?></td>
             <td><?php printf('%s', $student['roll']); ?></td>
-            <td><a href="edit.php?id=<?php printf('%d', $student['id']); ?>">Edit</a> | <a href="delete.php?id=<?php printf('%d', $student['id']); ?>">Delete</a></td>
+            <td><a href="index.php?task=edit&id=<?php printf('%d', $student['id']); ?>">Edit</a> | <a href="delete.php?id=<?php printf('%d', $student['id']); ?>">Delete</a></td>
             </tr>
         <?php
         }
@@ -97,6 +97,47 @@ function addStudent(string $fname, string $lname, string $roll)
             'roll'  => $roll
         );
         array_push($students, $student);
+        $serializeData = serialize($students);
+        file_put_contents(DB_NAME, $serializeData, LOCK_EX);
+        return true;
+    }
+    return false;
+}
+function getStudent(string $id)
+{
+    $serializedData = file_get_contents(DB_NAME);
+    $students = unserialize($serializedData);
+    foreach ($students as $student) {
+        if ($student['id'] == $id) {
+            return $student;
+        }
+    }
+    return false;
+}
+
+function updateStudent(string $id, string $fname, string $lname, string $roll)
+{
+    $found = false;
+    $serializedData = file_get_contents(DB_NAME);
+    $students = unserialize($serializedData);
+
+    foreach ($students as $_student) {
+        if ($_student['roll'] == $roll && $_student['id'] != $id) {
+            $found = true;
+            break;
+        }
+    }
+
+    if (!$found) {
+        foreach ($students as $key => $student) {
+            if ($student['id'] == $id) {
+                $students[$key]['fname'] = $fname;
+                $students[$key]['lname'] = $lname;
+                $students[$key]['roll'] = $roll;
+                break;
+            }
+        }
+
         $serializeData = serialize($students);
         file_put_contents(DB_NAME, $serializeData, LOCK_EX);
         return true;
