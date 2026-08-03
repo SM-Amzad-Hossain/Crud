@@ -1,4 +1,5 @@
 <?php
+
 require_once "inc/function.php";
 $info = '';
 $task = $_GET['task'] ?? 'report';
@@ -85,33 +86,37 @@ if (isset($_POST['submit'])) {
         <?php if ('add' == $task): ?>
             <div class="row">
                 <div class="column column-60 column-offset-20">
-                    <form action="index.php?task=add" method="POST">
+                    <form action="" method="POST">
                         <label for="fname">First Name</label>
-                        <input type="text" name="fname" id="fname" value="<?php echo $fname; ?>">
+                        <input type="text" name="fname" id="fname" value="<?php echo htmlspecialchars($fname); ?>">
                         <label for="lname">Last Name</label>
-                        <input type="text" name="lname" id="lname" value="<?php echo $lname; ?>">
+                        <input type="text" name="lname" id="lname" value="<?php echo htmlspecialchars($lname); ?>">
                         <label for="roll">Roll</label>
-                        <input type="text" name="roll" id="roll" value="<?php echo $roll; ?>">
+                        <input type="text" name="roll" id="roll" value="<?php echo htmlspecialchars($roll); ?>">
                         <button type="submit" class="button-primary" value="Save" name="submit">Save</button>
                     </form>
                 </div>
             </div>
         <?php endif; ?>
-        <?php if ('edit' == $task):
+        <?php
+        if ('edit' == $task):
             $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
-            $student = getStudent($id);
-            if ($student) :
+            if (!$id) {
+                $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+            }
+            $student = getStudent((int)$id);
+            if ($student):
         ?>
                 <div class="row">
                     <div class="column column-60 column-offset-20">
                         <form action="index.php?task=edit&id=<?php echo $id; ?>" method="POST">
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
                             <label for="fname">First Name</label>
-                            <input type="text" name="fname" id="fname" value="<?php echo $student['fname']; ?>">
+                            <input type="text" name="fname" id="fname" value="<?php echo htmlspecialchars($student['fname']); ?>">
                             <label for="lname">Last Name</label>
-                            <input type="text" name="lname" id="lname" value="<?php echo $student['lname']; ?>">
+                            <input type="text" name="lname" id="lname" value="<?php echo htmlspecialchars($student['lname']); ?>">
                             <label for="roll">Roll</label>
-                            <input type="text" name="roll" id="roll" value="<?php echo $student['roll']; ?>">
+                            <input type="text" name="roll" id="roll" value="<?php echo htmlspecialchars($student['roll']); ?>">
                             <button type="submit" class="button-primary" name="submit">Update</button>
                         </form>
                     </div>
@@ -119,7 +124,7 @@ if (isset($_POST['submit'])) {
         <?php endif;
         endif; ?>
 
-    </div>
-</body>
+            </div>
+        </body>
 
-</html>
+        </html>
