@@ -1,7 +1,4 @@
 <?php
-
-use LDAP\Result;
-
 require_once "inc/function.php";
 $info = '';
 $task = $_GET['task'] ?? 'report';
@@ -10,6 +7,7 @@ if ('seed' == $task) {
     seed();
     $info = 'Data seeded successfully';
 }
+
 $fname = '';
 $lname = '';
 $roll = '';
@@ -44,7 +42,6 @@ if (isset($_POST['submit'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,7 +51,6 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
 </head>
-
 <body>
     <div class="continer">
         <div class="row">
