@@ -103,6 +103,7 @@ function addStudent(string $fname, string $lname, string $roll)
     }
     return false;
 }
+
 function getStudent($id)
 {
     $serializedData = file_get_contents(DB_NAME);
@@ -115,7 +116,7 @@ function getStudent($id)
     return false;
 }
 
-function updateStudent($id, string $fname, string $lname, string $roll)
+function updateStudent(int $id, string $fname, string $lname, string $roll)
 {
     $found = false;
     $serializedData = file_get_contents(DB_NAME);
@@ -127,17 +128,11 @@ function updateStudent($id, string $fname, string $lname, string $roll)
         }
     }
     if (!$found) {
-        foreach ($students as $key => $student) {
-            if ($student['id'] == $id) {
-                $students[$key]['fname'] = $fname;
-                $students[$key]['lname'] = $lname;
-                $students[$key]['roll'] = $roll;
-                break;
-            }
-        }
-
-        $serializeData = serialize($students);
-        file_put_contents(DB_NAME, $serializeData, LOCK_EX);
+        $students[$id - 1]['fname'] = $fname;
+        $students[$id - 1]['lname'] = $lname;
+        $students[$id - 1]['roll'] = $roll;
+        $serializedData = serialize($students);
+        file_put_contents(DB_NAME, $serializedData, LOCK_EX);
         return true;
     }
     return false;
