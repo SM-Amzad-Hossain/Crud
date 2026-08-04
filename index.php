@@ -7,6 +7,7 @@ if ('seed' == $task) {
     seed();
     $info = 'Data seeded successfully';
 }
+
 $fname = '';
 $lname = '';
 $roll = '';
@@ -16,7 +17,6 @@ if (isset($_POST['submit'])) {
     $lname = filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_SPECIAL_CHARS);
     $roll = filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_SPECIAL_CHARS);
     $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
-
     if ($id) {
         if ($fname != '' && $lname != '' && $roll != '') {
             $result = updateStudent($id, $fname, $lname, $roll);
@@ -42,7 +42,6 @@ if (isset($_POST['submit'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +51,6 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
 </head>
-
 <body>
     <div class="continer">
         <div class="row">
@@ -97,10 +95,11 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
         <?php endif; ?>
-        <?php if ('edit' == $task):
-            $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+        <?php
+        if ('edit' == $task):
+            $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
             $student = getStudent($id);
-            if ($student) :
+            if ($student):
         ?>
                 <div class="row">
                     <div class="column column-60 column-offset-20">
@@ -118,6 +117,7 @@ if (isset($_POST['submit'])) {
                 </div>
         <?php endif;
         endif; ?>
+        ?>
 
     </div>
 </body>
