@@ -3,6 +3,15 @@ require_once "inc/function.php";
 $info = '';
 $task = $_GET['task'] ?? 'report';
 $error = $_GET['error'] ?? '0';
+if ('delete' == $task) {
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    if ($id > 0) {
+        deleteStudent($id);
+        header('location: index.php?task=report');
+        exit;
+    }
+}
+
 if ('seed' == $task) {
     seed();
     $info = 'Data seeded successfully';
@@ -16,7 +25,7 @@ if (isset($_POST['submit'])) {
     $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_SPECIAL_CHARS);
     $lname = filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_SPECIAL_CHARS);
     $roll = filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_SPECIAL_CHARS);
-    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     if ($id) {
         if ($fname != '' && $lname != '' && $roll != '') {
             $result = updateStudent($id, $fname, $lname, $roll);
@@ -42,6 +51,7 @@ if (isset($_POST['submit'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,6 +61,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
 </head>
+
 <body>
     <div class="continer">
         <div class="row">
@@ -77,6 +88,7 @@ if (isset($_POST['submit'])) {
             <div class="row">
                 <div class="column column-60 column-offset-20">
                     <?php generateReport(); ?>
+                    <!-- <pre><?php printRaw() ?></pre> -->
                 </div>
             </div>
         <?php endif; ?>
@@ -120,6 +132,7 @@ if (isset($_POST['submit'])) {
         ?>
 
     </div>
+    <script type="text/javascript" src="/assets.js/js/script.js"></script>
 </body>
 
 </html>

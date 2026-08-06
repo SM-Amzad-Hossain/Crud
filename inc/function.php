@@ -69,7 +69,7 @@ function generateReport()
             <td><?php printf('%d', $student['id']); ?></td>
             <td><?php printf('%s %s', $student['fname'], $student['lname']); ?></td>
             <td><?php printf('%s', $student['roll']); ?></td>
-            <td><a href="index.php?task=edit&id=<?php printf('%d', $student['id']); ?>">Edit</a> | <a href="index.php?task=delete&id=<?php printf('%d', $student['id']); ?>">Delete</a></td>
+            <td><a href="index.php?task=edit&id=<?php printf('%d', $student['id']); ?>">Edit</a> | <a class="delete" href="index.php?task=delete&id=<?php printf('%d', $student['id']); ?>">Delete</a></td>
             </tr>
         <?php
         }
@@ -89,7 +89,7 @@ function addStudent(string $fname, string $lname, string $roll)
         }
     }
     if (!$found) {
-        $newID = count($students) + 1;
+        $newID = getNewID($students);
         $student = array(
             'id'    => $newID,
             'fname' => $fname,
@@ -103,8 +103,7 @@ function addStudent(string $fname, string $lname, string $roll)
     }
     return false;
 }
-
-function getStudent($id)
+function getStudent(int $id)
 {
     $serializedData = file_get_contents(DB_NAME);
     $students = unserialize($serializedData);
@@ -121,19 +120,49 @@ function updateStudent(int $id, string $fname, string $lname, string $roll)
     $found = false;
     $serializedData = file_get_contents(DB_NAME);
     $students = unserialize($serializedData);
+
     foreach ($students as $_student) {
         if ($_student['roll'] == $roll && $_student['id'] != $id) {
             $found = true;
             break;
         }
     }
+
     if (!$found) {
-        $students[$id - 1]['fname'] = $fname;
-        $students[$id - 1]['lname'] = $lname;
-        $students[$id - 1]['roll'] = $roll;
-        $serializedData = serialize($students);
-        file_put_contents(DB_NAME, $serializedData, LOCK_EX);
+        foreach ($students as $key => $student) {
+            if ($student['id'] == $id) {
+                $students[$key]['fname'] = $fname;
+                $students[$key]['lname'] = $lname;
+                $students[$key]['roll'] = $roll;
+                break;
+            }
+        }
+
+        $serializeData = serialize($students);
+        file_put_contents(DB_NAME, $serializeData, LOCK_EX);
         return true;
     }
     return false;
+}
+
+function deleteStudent(int $id)
+{
+    $serializedData = file_get_contents(DB_NAME);
+    $students = unserialize($serializedData);
+    unset($students[$id - 1]);
+    $serializeData = serialize($students);
+    file_put_contents(DB_NAME, $serializeData, LOCK_EX);
+}
+
+function printRaw()
+{
+    $serializedData = file_get_contents(DB_NAME);
+    $students = unserialize($serializedData);
+    print_r($students);
+}
+
+function getNewID(array $students): int
+{
+    $maxID = max(array_column($students, 'id'));
+    return $maxID + 1;
 }
